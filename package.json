@@ -1,0 +1,15 @@
+{
+  "name": "car-neural-network",
+  "main": "app/run.js",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "brain": "~0.6.3",
+    "mongoskin": "~1.4.1",
+    "yargs": "~1.2.1",
+    "q": "~1.0.1"
+  },
+  "engines": {
+    "node": "0.10.x"
+  }
+}
