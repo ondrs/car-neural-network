@@ -111,7 +111,7 @@ Network.prototype.getTrainingData_ = function() {
 /**
  * @returns {Q.promise}
  */
-Network.prototype.findCandidates = function() {
+Network.prototype.lookup = function() {
   var self = this,
     deferred = Q.defer(),
     filter = {

@@ -18,14 +18,14 @@ if(argv.train) {
 }
 
 
-if(argv.findCandidates) {
+if(argv.lookup) {
   var mongo = mongoskin.db(config.mongo.real, { safe: true }),
     network = new Network(mongo);
 
   network
     .loadFromFile()
     .then(function() {
-      return network.findCandidates();
+      return network.lookup();
     })
     .then(function(result) {
       console.log(result.map(function(i) {
