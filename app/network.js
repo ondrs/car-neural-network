@@ -7,11 +7,12 @@ var Q = require('q'),
 /**
  *
  * @param {MongoClient} mongo
+ * @param {Object} netOptions
  * @constructor
  */
-function Network(mongo) {
+function Network(mongo, netOptions) {
   this.mongo_ = mongo;
-  this.net_ = new brain.NeuralNetwork();
+  this.net_ = new brain.NeuralNetwork(netOptions);
 }
 
 /**
@@ -109,9 +110,10 @@ Network.prototype.getTrainingData_ = function() {
 
 
 /**
+ * @param {number} mark
  * @returns {Q.promise}
  */
-Network.prototype.lookup = function() {
+Network.prototype.lookup = function(mark) {
   var self = this,
     deferred = Q.defer(),
     filter = {
@@ -137,11 +139,10 @@ Network.prototype.lookup = function() {
 
     var output = self.net_.run(Helpers.scale(item));
 
-    if(output.mark > 0.9) {
+    if(output.mark > (0.95 || mark)) {
       item.mark = output.mark;
       candidates.push(item);
     }
-
   });
 
 

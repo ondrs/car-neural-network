@@ -4,17 +4,31 @@ var argv = require('yargs').argv,
   Network = require('./network.js');
 
 
-
 if(argv.train) {
   var mongo = mongoskin.db(config.mongo.train, { safe: true }),
-    network = new Network(mongo);
+    networkOptions = {};
+
+  if(argv.h) {
+    networkOptions.hiddenLayers = argv.h instanceof Array ? argv.h : [argv.h];
+  }
+
+  if(argv.l) {
+    networkOptions.learningRate = argv.l;
+  }
+
+  network = new Network(mongo, networkOptions);
+
+  console.time('train time');
 
   network
     .train()
     .then(function() {
-      return network.saveToFile();
+      return network.saveToFile(argv.f);
     })
-    .done(process.exit);
+    .done(function() {
+      console.timeEnd('train time');
+      process.exit();
+    });
 }
 
 
@@ -23,13 +37,16 @@ else if(argv.lookup) {
     network = new Network(mongo);
 
   network
-    .loadFromFile()
+    .loadFromFile(argv.f)
     .then(function() {
-      return network.lookup();
+      return network.lookup(argv.m);
     })
     .then(function(result) {
       console.log(result.map(function(i) {
-        return i.url;
+        return {
+          url: i.url,
+          mark: i.mark
+        };
       }));
     })
     .done(process.exit);
