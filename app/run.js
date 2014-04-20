@@ -18,7 +18,7 @@ if(argv.train) {
 }
 
 
-if(argv.lookup) {
+else if(argv.lookup) {
   var mongo = mongoskin.db(config.mongo.real, { safe: true }),
     network = new Network(mongo);
 

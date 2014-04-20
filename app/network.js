@@ -121,23 +121,29 @@ Network.prototype.lookup = function() {
     },
     candidates = [];
 
-  self.mongo_.collection('vehicles').findItems(filter, function(err, results) {
+  var cursor = self.mongo_.collection('vehicles').find(filter);
+
+  cursor.each(function(err, item) {
+
     if(err) {
       deferred.reject(err);
       return;
     }
 
-    results.forEach(function(result) {
-      var output = self.net_.run(Helpers.scale(result));
+    if(item === null) {
+      deferred.resolve(candidates);
+      return;
+    }
 
-      if(output.mark > 0.9) {
-        result.mark = output.mark;
-        candidates.push(result);
-      }
-    });
+    var output = self.net_.run(Helpers.scale(item));
 
-    deferred.resolve(candidates);
+    if(output.mark > 0.9) {
+      item.mark = output.mark;
+      candidates.push(item);
+    }
+
   });
+
 
   return deferred.promise;
 };
