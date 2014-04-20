@@ -8,7 +8,7 @@ var argv = require('yargs').argv,
   tempDir = baseDir + '/temp',
 
   mongoskin = require('mongoskin'),
-  mongo = mongoskin.db(config.mongo, { safe: true });
+  mongo = mongoskin.db(config.mongo.remote, { safe: true });
 
 
 
@@ -18,10 +18,7 @@ if(argv.train) {
   var trainer = new NetworkTrainer(mongo);
 
   trainer
-    .getData()
-    .then(function(data) {
-      console.log(data);
-    })
+    .train()
     .done(process.exit);
 }
 
